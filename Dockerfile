@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 LABEL MAINTAINER="mine525 <mine.go.0525@gmail.com>"
-WORKDIR C:\Users\mineyuki\Docker_mitsuba
+WORKDIR /mitsuba-ALVRL-fwddip
 
 RUN apt-get update && apt-get install -y \
   vim \
