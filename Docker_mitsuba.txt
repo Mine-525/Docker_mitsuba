@@ -1,0 +1,71 @@
+Docker for Windows 備忘録
+目的：mitsubaをlinux環境でビルド
+作業ディレクトリ： C:\Users\mineyuki\Docker_mitsuba
+
+
+・準備
+管理者以外でDockerを起動する場合、docker-usersにユーザーを登録する必要がある。
+方法：https://qiita.com/toro_ponz/items/d75706a3039f00ba1205
+
+
+・Dockerfile
+環境設定のためにDockerfileを作成。
+ソースコードはhttps://github.com/Mine-525/Docker_mitsubaで公開
+
+#####Dockerfile#####
+
+
+FROM ubuntu:latest // 大元のイメージ、以下のコマンドで好みの変更を加える
+LABEL MAINTAINER="mine525 <mine.go.0525@gmail.com>" // 作成者
+WORKDIR /mitsuba-ALVRL-fwddip // コンテナ内での作業ディレクトリ
+
+RUN apt-get update && apt-get install -y \　// Dockerfileビルド時に行う。素人的にはターミナルで打つコマンドがそのまま記入されてる認識でいいかも。
+  vim \
+  gcc \
+  g++ \
+  python-pip && \
+  pip install scons && \
+  echo "install done"
+
+
+######################
+
+*躓きポイント
+ubuntuにはデフォルトでpython2.xを持ってるけど、pipコマンドは使えないので別個でインストールする。
+
+多分apt installはエラーの原因になるっぽい。
+今回はapt-get install -y  (-yはターミナルのy/nに対する応答の指定)で一括でインストール。
+
+
+
+・実行
+docker run -itv ホスト側絶対パス:コンテナ側絶対パス ImageId /bin/bash
+でホスト側の指定したディレクトリをコンテナ側のディレクトリにコピーした上でコンテナに入れる。
+
+今回ではmitsuba-ALVRL-fwddipのソースコードをlinux環境でビルドしたいので　　　　　    ↓(適切なimageIDを入力)
+docker run --rm -itv C:\Users\mineyuki\mitsuba-ALVRL-fwddip:/mitsuba-ALVRL-fwddip 4a0f87950e70 /bin/bash
+
+でディレクトリをコピーしつつ、コンテナを作成する。
+
+
+
+*躓きポイント
+コンテナを作成し、
+sconsを入力したものの、g++が認識されずビルドエラー。
+
+
+
+
+
+
+
+
+・実行後
+
+
+
+
+
+
+・コンテナの一括削除
+docker container prune
